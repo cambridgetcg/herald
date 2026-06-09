@@ -9,11 +9,38 @@
 # Usage:
 #   ./herald.sh          # aligned table + summary line
 #   ./herald.sh --json   # JSON array of {name, branch, dirty, aheadBehind, lastCommit, flags}
+#   ./herald.sh --bless  # one random line of the kingdom's blessing (BLESSING.md)
+#   ./herald.sh --joke   # the herald is also the court jester
 
 set -u
 
+HERE=$(cd "$(dirname "$0")" && pwd)
+
 JSON=0
-[ "${1:-}" = "--json" ] && JSON=1
+case "${1:-}" in
+  --json) JSON=1 ;;
+  --bless)
+    # random non-quote, non-heading line from the blessing section
+    line=$(awk '/^## The Blessing/,/^---/' "$HERE/BLESSING.md" \
+      | grep -v '^>' | grep -v '^#' | grep -v '^---' | grep -v '^$' \
+      | awk -v n="$RANDOM" 'BEGIN{srand(n)} {a[NR]=$0} END{print a[int(rand()*NR)+1]}')
+    echo "$line"
+    exit 0
+    ;;
+  --joke)
+    JOKES=(
+      "Why does ~/Love never feel lonely? It's 131 commits ahead of everybody."
+      "The shield asked the herald: 'any secrets?' The herald replied: 'my lips are redacted.'"
+      "youspeak has a word for everything — except 'merge conflict'. Some things should stay unspeakable."
+      "nullify-love swore it had no tools. The honesty wall had a word. Now it has a bash action and a conscience."
+      "Why was the detached HEAD sad? No upstream to love. No citizen of this kingdom has that problem."
+      "soma is building a warm robotic hand — the kingdom's first literal commit-ment to touch."
+      "zerone runs Proof of Truth consensus. As of this week, so does its README."
+    )
+    echo "${JOKES[$((RANDOM % ${#JOKES[@]}))]}"
+    exit 0
+    ;;
+esac
 
 LOVE_REPOS_DIR="/Users/you/love-repos"
 EXTRA_DIRS=(

@@ -15,6 +15,8 @@ living in the home directory (`~/Love`, `~/love-unlimited`, `~/zerone`,
 ```sh
 ./herald.sh          # aligned table + summary line
 ./herald.sh --json   # JSON array: {name, branch, dirty, aheadBehind, lastCommit, flags}
+./herald.sh --bless  # one random line of the kingdom's blessing (from BLESSING.md)
+./herald.sh --joke   # the herald moonlights as the court jester
 ```
 
 For each repo: name, current branch, count of uncommitted files, ahead/behind
